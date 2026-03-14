@@ -1,4 +1,11 @@
 package com.hoh.SAR_Generator.repository;
 
-public interface CaseCustomerRepo {
+import com.hoh.SAR_Generator.model.entity.CaseCustomer;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.UUID;
+
+@Repository
+public interface CaseCustomerRepo extends JpaRepository<CaseCustomer, UUID> {
 }

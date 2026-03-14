@@ -1,4 +1,11 @@
 package com.hoh.SAR_Generator.repository;
 
-public interface ReasoningTraceRepo {
+import com.hoh.SAR_Generator.model.entity.ReasoningTrace;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.UUID;
+
+@Repository
+public interface ReasoningTraceRepo extends JpaRepository<ReasoningTrace, UUID> {
 }

@@ -1,4 +1,11 @@
 package com.hoh.SAR_Generator.repository;
 
-public interface BankRepo {
+import com.hoh.SAR_Generator.model.entity.Bank;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.UUID;
+
+@Repository
+public interface BankRepo extends JpaRepository<Bank, UUID> {
 }
