@@ -1,0 +1,130 @@
+{
+  "aggregate": {
+    "hamming_loss": 0.0494,
+    "macro_f1": 0.8078,
+    "micro_f1": 0.8496,
+    "exact_match": 0.745
+  },
+  "confusion_sar_worthy": {
+    "tn": 644,
+    "fp": 56,
+    "fn": 40,
+    "tp": 660
+  },
+  "per_label": {
+    "sar_worthy": {
+      "f1": 0.9322,
+      "precision": 0.9218,
+      "recall": 0.9429,
+      "roc_auc": 0.9839,
+      "best_round": 926,
+      "spw": 1.0,
+      "pos_in_test": 700
+    },
+    "typology_structuring": {
+      "f1": 0.8155,
+      "precision": 0.7283,
+      "recall": 0.9265,
+      "roc_auc": 0.9892,
+      "best_round": 226,
+      "spw": 8.32,
+      "pos_in_test": 136
+    },
+    "typology_rapid_movement": {
+      "f1": 0.8789,
+      "precision": 0.8186,
+      "recall": 0.9487,
+      "roc_auc": 0.994,
+      "best_round": 226,
+      "spw": 6.16,
+      "pos_in_test": 195
+    },
+    "typology_funnel_account": {
+      "f1": 0.8108,
+      "precision": 0.7192,
+      "recall": 0.9292,
+      "roc_auc": 0.9888,
+      "best_round": 183,
+      "spw": 11.73,
+      "pos_in_test": 113
+    },
+    "typology_trade_based": {
+      "f1": 0.6757,
+      "precision": 0.5714,
+      "recall": 0.8264,
+      "roc_auc": 0.9681,
+      "best_round": 332,
+      "spw": 9.69,
+      "pos_in_test": 121
+    },
+    "typology_shell_company": {
+      "f1": 0.6524,
+      "precision": 0.5459,
+      "recall": 0.8106,
+      "roc_auc": 0.962,
+      "best_round": 373,
+      "spw": 10.41,
+      "pos_in_test": 132
+    },
+    "typology_round_tripping": {
+      "f1": 0.8889,
+      "precision": 0.8317,
+      "recall": 0.9545,
+      "roc_auc": 0.9979,
+      "best_round": 143,
+      "spw": 19.07,
+      "pos_in_test": 88
+    }
+  },
+  "test_rows": 1400,
+  "train_rows": 5600,
+  "n_features": 7,
+  "dropped_mi": [
+    "kyc_risk_score",
+    "kyc_x_alert",
+    "alert_tier",
+    "alert_count",
+    "account_age_days_log",
+    "binary_risk_flag_count",
+    "kyc_risk_tier",
+    "high_risk_country_flag",
+    "counterparty_diversity_score",
+    "pep_x_intl",
+    "historical_sar_flag",
+    "alert_density",
+    "sar_history_x_kyc",
+    "high_risk_combined",
+    "diversity_x_sources",
+    "distinct_counterparties_log",
+    "pep_flag",
+    "txn_velocity_log",
+    "international_counterparty_flag",
+    "max_to_avg_txn_ratio",
+    "std_txn_amount_cbrt",
+    "max_txn_amount_cbrt",
+    "min_txn_amount_cbrt",
+    "total_txn_amount_cbrt",
+    "txn_amount_cv",
+    "txn_count_log",
+    "incoming_sources_count_log",
+    "avg_txn_amount_cbrt",
+    "counterparty_to_txn_ratio",
+    "incoming_to_outgoing_ratio",
+    "all_flags_set"
+  ],
+  "dropped_vif": [
+    "fund_exit_ratio"
+  ],
+  "never_used_splits": [],
+  "optuna_best_params": {
+    "max_depth": 5,
+    "learning_rate": 0.14292386014810243,
+    "subsample": 0.9648729581624237,
+    "colsample_bytree": 0.9785223561273183,
+    "min_child_weight": 7,
+    "gamma": 0.22954218137274357,
+    "reg_alpha": 1.5818311166020083,
+    "reg_lambda": 2.3980034176136282
+  },
+  "optuna_best_cv_f1": 0.9236
+}

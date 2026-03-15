@@ -1,0 +1,12 @@
+{
+  "features": [
+    "burst_score",
+    "time_to_first_outbound_minutes_log",
+    "burst_x_exit",
+    "fund_exit_tier",
+    "hr_country_x_exit",
+    "burst_per_age",
+    "burst_tier"
+  ],
+  "n": 7
+}
