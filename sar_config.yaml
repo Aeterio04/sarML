@@ -1,0 +1,1320 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# SAR Multi-Agent Pipeline Configuration
+# ═══════════════════════════════════════════════════════════════════════════
+# This file contains all configuration for the SAR pipeline agents.
+# Changes to this file are automatically picked up by all agents via hot reload.
+# Use config_update_agent.py to update this file using natural language.
+
+metadata:
+  version: "1.0.0"
+  last_updated: "2024-07-28T16:30:00Z"
+  description: "SAR pipeline configuration - all agents"
+  changelog:
+    - timestamp: "2026-03-28T00:00:00Z"
+      instruction: "Initial configuration extraction from hardcoded values"
+      sections_modified: ["all"]
+    - timestamp: "2024-07-28T12:00:00Z"
+      instruction: "Add cryptocurrency support to the SAR pipeline configuration: Add 2 crypto typologies: crypto_structuring, crypto_rapid_liquidation. Add 4 crypto features to case_features: crypto_transaction_count, crypto_total_volume_inr, crypto_velocity_score, high_risk_exchange_flag. Add corresponding label columns: typology_crypto_structuring, typology_crypto_rapid_liquidation. Add 2 crypto rules: R-CRYPTO-STR-01, R-CRYPTO-LIQ-01. Add crypto thresholds: crypto.structuring_threshold_inr: 1000000, crypto.rapid_liquidation_hours: 6. Keep all existing functionality intact."
+      sections_modified: ["feature_lists", "typologies", "rules", "numeric_thresholds"]
+    - timestamp: "2024-07-28T14:48:30Z"
+      instruction: "Add cryptocurrency support to the SAR pipeline configuration: Add 2 crypto typologies: crypto_structuring, crypto_rapid_liquidation. Add 4 crypto features to case_features: crypto_transaction_count, crypto_total_volume_inr, crypto_velocity_score, high_risk_exchange_flag. Add corresponding label columns: typology_crypto_structuring, typology_crypto_rapid_liquidation. Add 2 crypto rules: R-CRYPTO-STR-01, R-CRYPTO-LIQ-01. Add crypto thresholds: crypto.structuring_threshold_inr: 1000000, crypto.rapid_liquidation_hours: 6. Keep all existing functionality intact."
+      sections_modified: ["feature_lists", "typologies", "rules", "numeric_thresholds"]
+    - timestamp: "2024-07-28T16:30:00Z"
+      instruction: "Add cryptocurrency support to the SAR pipeline configuration: Add 2 crypto typologies: crypto_structuring, crypto_rapid_liquidation. Add 4 crypto features to case_features: crypto_transaction_count, crypto_total_volume_inr, crypto_velocity_score, high_risk_exchange_flag. Add corresponding label columns: typology_crypto_structuring, typology_crypto_rapid_liquidation. Add 2 crypto rules: R-CRYPTO-STR-01, R-CRYPTO-LIQ-01. Add crypto thresholds: crypto.structuring_threshold_inr: 1000000, crypto.rapid_liquidation_hours: 6. Keep all existing functionality intact."
+      sections_modified: ["feature_lists", "typologies", "rules", "numeric_thresholds"]
+
+# ═══════════════════════════════════════════════════════════════════════════
+# FEATURE LISTS
+# ═══════════════════════════════════════════════════════════════════════════
+# All feature column names used across agents for ML models and data processing
+
+feature_lists:
+  # Agent 4 case-level features (33 features for ML scoring)
+  case_features:
+    - total_txn_amount_cbrt
+    - avg_txn_amount_cbrt
+    - std_txn_amount_cbrt
+    - txn_count_log
+    - txn_amount_cv
+    - max_to_avg_txn_ratio
+    - fund_exit_ratio
+    - burst_score
+    - time_to_first_outbound_minutes_log
+    - txn_velocity_log
+    - burst_per_age
+    - distinct_counterparties_log
+    - incoming_sources_count_log
+    - counterparty_diversity_score
+    - counterparty_to_txn_ratio
+    - incoming_to_outgoing_ratio
+    - alert_count
+    - alert_density
+    - alert_tier
+    - kyc_x_alert
+    - international_counterparty_flag
+    - high_risk_country_flag
+    - pep_flag
+    - kyc_risk_score
+    - kyc_risk_tier
+    - historical_sar_flag
+    - high_risk_combined
+    - burst_x_exit
+    - hr_country_x_exit
+    - pep_x_intl
+    - sar_history_x_kyc
+    - fund_exit_tier
+    - binary_risk_flag_count
+    - crypto_transaction_count
+    - crypto_total_volume_inr
+    - crypto_velocity_score
+    - high_risk_exchange_flag
+
+  # Label columns (target variables)
+  label_columns:
+    - sar_worthy
+    - typology_structuring
+    - typology_rapid_movement
+    - typology_funnel_account
+    - typology_trade_based
+    - typology_shell_company
+    - typology_round_tripping
+    - typology_crypto_structuring
+    - typology_crypto_rapid_liquidation
+
+  # Typology columns (subset of labels, excludes sar_worthy)
+  typology_columns:
+    - typology_structuring
+    - typology_rapid_movement
+    - typology_funnel_account
+    - typology_trade_based
+    - typology_shell_company
+    - typology_round_tripping
+    - typology_crypto_structuring
+    - typology_crypto_rapid_liquidation
+
+  # Binary risk flag features
+  binary_features:
+    - international_counterparty_flag
+    - pep_flag
+    - high_risk_country_flag
+    - historical_sar_flag
+
+  # Cube root transform columns
+  cbrt_columns:
+    - total_txn_amount
+    - avg_txn_amount
+    - std_txn_amount
+    - max_txn_amount
+    - min_txn_amount
+
+  # Log1p transform columns
+  log1p_columns:
+    - time_to_first_outbound_minutes
+    - txn_count
+    - account_age_days
+    - incoming_sources_count
+    - txn_velocity
+    - distinct_counterparties
+
+# ═══════════════════════════════════════════════════════════════════════════
+# TYPOLOGIES
+# ═══════════════════════════════════════════════════════════════════════════
+# All typology definitions with metadata, rules, and detection signals
+
+typologies:
+  structuring:
+    label_column: typology_structuring
+    display_name: "Structuring / Smurfing"
+    description: "Breaking large transactions into smaller amounts to avoid CTR reporting thresholds"
+    regulatory_references:
+      - "PMLA Rule 3 - CTR threshold INR 10L"
+      - "FATF-2005 §2.4 - Structuring patterns"
+    rule_ids:
+      - R-STR-01
+      - R-STR-02
+    detection_signals:
+      - "Multiple transactions just below INR 10L threshold (900K-999K band)"
+      - "Low coefficient of variation (CV < 0.15) indicating consistent sizing"
+      - "High alert density relative to account age"
+    risk_score: 0.75
+
+  rapid_movement:
+    label_column: typology_rapid_movement
+    display_name: "Rapid Movement of Funds"
+    description: "Quick movement of funds through accounts with minimal retention time"
+    regulatory_references:
+      - "FATF-2005 §2.2 - High velocity transfers"
+      - "FATF-2005 §4.1 - Rapid fund exit patterns"
+    rule_ids:
+      - R-HVT-01
+      - R-HVT-02
+    detection_signals:
+      - "High velocity score (> 0.75) on SWIFT wires"
+      - "Outbound wire within hours of inbound credit"
+      - "Fund exit ratio > 0.80"
+    risk_score: 0.85
+
+  layering:
+    label_column: typology_funnel_account
+    display_name: "Layering / Funnel Account"
+    description: "Multiple incoming sources consolidated and moved through complex transaction chains"
+    regulatory_references:
+      - "FATF-2005 §3.1 - Multi-hop transfers"
+      - "FATF-2005 §4.1 - Fan-in patterns"
+      - "FATF-RECS R.16 - Cross-border layering"
+    rule_ids:
+      - R-LYR-01
+      - R-IWT-01
+    detection_signals:
+      - "Multiple distinct incoming sources (> 4)"
+      - "Internal transfers or RTGS multi-hop patterns"
+      - "International wire transfers for cross-border layering"
+    risk_score: 0.80
+
+  tbml:
+    label_column: typology_trade_based
+    display_name: "Trade-Based Money Laundering (TBML)"
+    description: "Money laundering through trade transactions using over/under-invoicing"
+    regulatory_references:
+      - "FATF-TBML §2.2 - Over/under-invoicing patterns"
+      - "FATF-RECS R.19 - High-risk jurisdiction exposure"
+    rule_ids:
+      - R-TBM-01
+      - R-IWT-02
+    detection_signals:
+      - "Round amounts (100K multiples) to foreign countries"
+      - "Transactions with FATF high-risk jurisdictions (score > 0.50)"
+      - "Cross-border transactions with pricing anomalies"
+    risk_score: 0.82
+
+  shell_company:
+    label_column: typology_shell_company
+    display_name: "Shell Company / Complex Structures"
+    description: "Use of shell companies or complex ownership structures to obscure beneficial ownership"
+    regulatory_references:
+      - "FATF-SHELL §3.1 - Shell entity indicators"
+      - "RBI-KYC S.38 - Enhanced due diligence for complex structures"
+    rule_ids: []
+    detection_signals:
+      - "High number of distinct counterparties (> 12)"
+      - "Multiple alerts (>= 3)"
+      - "High-risk country exposure with PEP involvement"
+    risk_score: 0.88
+
+  round_tripping:
+    label_column: typology_round_tripping
+    display_name: "Round Tripping"
+    description: "Funds sent abroad and returned as foreign investment to disguise domestic origin"
+    regulatory_references:
+      - "FATF-SHELL §4.2 - Round-trip capital flows"
+    rule_ids: []
+    detection_signals:
+      - "Very high fund exit ratio (> 0.85)"
+      - "High-risk country involvement"
+      - "Delayed outbound flow pattern"
+      - "High burst × exit interaction"
+    risk_score: 0.90
+
+  clean:
+    label_column: null
+    display_name: "Clean / No Typology"
+    description: "No suspicious typology detected"
+    regulatory_references: []
+    rule_ids: []
+    detection_signals: []
+    risk_score: 0.0
+
+  multi:
+    label_column: null
+    display_name: "Multiple Typologies"
+    description: "Case exhibits characteristics of multiple typologies simultaneously"
+    regulatory_references: []
+    rule_ids:
+      - R-STR-01
+      - R-STR-02
+      - R-HVT-01
+      - R-HVT-02
+    detection_signals:
+      - "Triggers both structuring and rapid movement rules"
+    risk_score: 0.90
+  crypto_structuring:
+    label_column: typology_crypto_structuring
+    display_name: "Crypto Structuring"
+    description: "Breaking large cryptocurrency purchases/sales into smaller amounts to avoid reporting thresholds or scrutiny"
+    regulatory_references:
+      - "FATF Guidance on VAs - Chapter 4"
+    rule_ids:
+      - R-CRYPTO-STR-01
+    detection_signals:
+      - "Multiple crypto transactions just below threshold"
+      - "Consistent small-value crypto trades"
+    risk_score: 0.78
+  crypto_rapid_liquidation:
+    label_column: typology_crypto_rapid_liquidation
+    display_name: "Crypto Rapid Liquidation"
+    description: "Rapid conversion of cryptocurrency to fiat followed by quick outbound transfers (e.g., wire) from the financial institution"
+    regulatory_references:
+      - "FATF Guidance on VAs - Chapter 4"
+      - "FinCEN Advisory FIN-2021-A004"
+    rule_ids:
+      - R-CRYPTO-LIQ-01
+    detection_signals:
+      - "High crypto velocity score followed by fiat conversion"
+      - "Outbound wire transfer within hours of crypto liquidation"
+    risk_score: 0.87
+
+# ═══════════════════════════════════════════════════════════════════════════
+# FATF CONFIGURATION
+# ═══════════════════════════════════════════════════════════════════════════
+# FATF high-risk jurisdiction lists and country risk scores (October 2024)
+
+fatf_configuration:
+  last_updated: "2024-10-25"
+  next_update_estimated: "2025-02-01"
+  source_url: "https://www.fatf-gafi.org/en/topics/high-risk-and-other-monitored-jurisdictions.html"
+
+  # FATF Black List - Call for Action (CRITICAL risk)
+  blacklist:
+    countries:
+      - Iran
+      - North Korea
+      - Myanmar
+      - DPRK
+    iso_codes:
+      - IR
+      - KP
+      - MM
+      - YE
+    risk_score: 1.0
+    severity: CRITICAL
+
+  # FATF Grey List - Increased Monitoring (HIGH risk)
+  greylist:
+    countries:
+      - Bulgaria
+      - Burkina Faso
+      - Cameroon
+      - Cote d'Ivoire
+      - Croatia
+      - Democratic Republic of Congo
+      - Haiti
+      - Jamaica
+      - Kenya
+      - Mali
+      - Mozambique
+      - Namibia
+      - Nigeria
+      - Philippines
+      - Senegal
+      - South Africa
+      - South Sudan
+      - Syria
+      - Tanzania
+      - Trinidad and Tobago
+      - Uganda
+      - Vietnam
+      - Yemen
+      - DRC
+      - Congo
+      - Ivory Coast
+      - Trinidad
+    iso_codes:
+      - AE
+      - PK
+      - NG
+      - VN
+      - ET
+      - SD
+      - SY
+    risk_score: 0.75
+    severity: HIGH
+
+  # Country-specific risk scores
+  country_risk_scores:
+    IN: 0.10  # India
+    GB: 0.10  # United Kingdom
+    US: 0.10  # United States
+    SG: 0.15  # Singapore
+    DE: 0.10  # Germany
+    AE: 0.45  # UAE (grey list)
+    PK: 0.70  # Pakistan (grey list)
+    NG: 0.70  # Nigeria (grey list)
+    VN: 0.55  # Vietnam (grey list)
+    ET: 0.65  # Ethiopia (grey list)
+    IR: 0.95  # Iran (black list)
+    KP: 1.00  # North Korea (black list)
+    MM: 0.90  # Myanmar (black list)
+    YE: 0.85  # Yemen (black list)
+    SD: 0.75  # Sudan (grey list)
+    SY: 0.80  # Syria (grey list)
+    default: 0.20  # All other countries
+
+  # RBI Caution List - Indian entities flagged by RBI
+  rbi_caution_entities:
+    - pearlessential
+    - rose valley
+    - saradha
+    - speak asia
+    - stockguru
+    - gold sukh
+    - golden forest
+    - unitech
+    - iipm
+    - amway india
+    - sahara group
+
+  # Risk encoding for KYC risk ratings
+  risk_encoding:
+    LOW: 0
+    MEDIUM: 1
+    HIGH: 2
+
+  # Regulatory advisories database
+  advisories:
+    - id: FATF-2024-02
+      issuer: FATF
+      date: "2024-10-25"
+      severity: CRITICAL
+      title: "High-risk jurisdictions subject to a call for action (October 2024)"
+      jurisdictions:
+        - Iran
+        - North Korea
+        - Myanmar
+        - DPRK
+      typologies:
+        - all
+      summary: "FATF calls on members to apply enhanced due diligence to Iran, North Korea, Myanmar, DPRK."
+      url: "https://www.fatf-gafi.org/en/topics/high-risk-and-other-monitored-jurisdictions.html"
+      action_required: "Enhanced CDD + senior management approval before processing"
+
+    - id: FATF-2024-01
+      issuer: FATF
+      date: "2024-10-25"
+      severity: HIGH
+      title: "Jurisdictions under Increased Monitoring — Grey List (October 2024)"
+      jurisdictions:
+        - Bulgaria
+        - Burkina Faso
+        - Cameroon
+        - Cote d'Ivoire
+        - Croatia
+        - Democratic Republic of Congo
+        - Haiti
+        - Jamaica
+        - Kenya
+        - Mali
+        - Mozambique
+        - Namibia
+        - Nigeria
+        - Philippines
+        - Senegal
+        - South Africa
+        - South Sudan
+        - Syria
+        - Tanzania
+        - Trinidad and Tobago
+        - Uganda
+        - Vietnam
+        - Yemen
+        - DRC
+        - Congo
+        - Ivory Coast
+        - Trinidad
+      typologies:
+        - all
+      summary: "23 jurisdictions under increased monitoring. Transactions require enhanced scrutiny."
+      url: "https://www.fatf-gafi.org/en/topics/high-risk-and-other-monitored-jurisdictions.html"
+      action_required: "Enhanced monitoring; document rationale for all transactions"
+
+    - id: FIU-IND-2024-01
+      issuer: FIU-IND
+      date: "2024-07-01"
+      severity: HIGH
+      title: "Typology Report: Digital Payment Fraud and Mule Accounts in India"
+      jurisdictions: []
+      typologies:
+        - typology_funnel_account
+        - typology_rapid_movement
+      summary: "Mule accounts funnelling fraud proceeds through UPI/IMPS within hours of receipt. 47 distinct sources is a key indicator."
+      url: "https://fiuindia.gov.in/"
+      action_required: "File STR within 7 working days of detection; freeze account pending review"
+
+    - id: FinCEN-2024-01
+      issuer: FinCEN
+      date: "2024-03-01"
+      severity: MEDIUM
+      title: "Advisory: Structuring via Digital Channels Below Reporting Thresholds"
+      jurisdictions: []
+      typologies:
+        - typology_structuring
+      summary: "Structured deposits via mobile/net banking just below INR 10L CTR threshold remain a primary AML pattern."
+      url: "https://www.fincen.gov/resources/advisories"
+      action_required: "File SAR if 3+ sub-threshold deposits within 30 days from same account"
+
+    - id: RBI-2024-AML-01
+      issuer: RBI
+      date: "2024-09-15"
+      severity: HIGH
+      title: "Master Direction on KYC — Updated Section 16: PEP and Shell Entity Risk"
+      jurisdictions: []
+      typologies:
+        - typology_shell_company
+        - typology_round_tripping
+      summary: "Enhanced monitoring mandated for PEPs and beneficial owners of shell/offshore structures. Unexplained fund flows require immediate STR filing."
+      url: "https://rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=11566"
+      action_required: "Obtain source-of-funds declaration; escalate to MLRO within 24h"
+
+    - id: RBI-2023-TBML-01
+      issuer: RBI
+      date: "2023-11-20"
+      severity: HIGH
+      title: "Alert: Trade-Based Money Laundering via Over/Under-Invoicing"
+      jurisdictions: []
+      typologies:
+        - typology_trade_based
+      summary: "Banks must flag trade finance transactions with FATF-listed jurisdictions showing invoice values inconsistent with market rates."
+      url: "https://rbi.org.in/"
+      action_required: "Obtain independent valuation; cross-check with DGFT trade data"
+
+# ═══════════════════════════════════════════════════════════════════════════
+# RULES
+# ═══════════════════════════════════════════════════════════════════════════
+# Rule definitions for Agent 3 typology detection
+
+rules:
+  # Structuring rules
+  R-STR-01:
+    rule_name: THRESHOLD_STRUCTURING
+    severity: HIGH
+    description: "Amount INR {amount:.0f} in structuring band 900K-1M, just below INR 10L CTR threshold"
+    regulatory_reference: "PMLA Rule 3"
+    condition:
+      field: is_below_threshold
+      operator: "=="
+      value: 1
+    typology: structuring
+
+  R-STR-02:
+    rule_name: CONSISTENT_SUB_THRESHOLD
+    severity: MEDIUM
+    description: "Case amount CV {case_cv:.3f} < 0.15: highly consistent sizing pattern across deposits"
+    regulatory_reference: "FATF-2005 §2.4"
+    condition:
+      all:
+        - field: case_cv
+          operator: "<"
+          value: 0.15
+        - field: is_credit
+          operator: "=="
+          value: 1
+    typology: structuring
+
+  # Rapid movement rules
+  R-HVT-01:
+    rule_name: HIGH_VELOCITY_WIRE
+    severity: HIGH
+    description: "SWIFT wire velocity {velocity_score:.3f} > 0.75: rapid international movement"
+    regulatory_reference: "FATF-2005 §2.2"
+    condition:
+      all:
+        - field: velocity_score
+          operator: ">"
+          value: 0.75
+        - field: is_swift
+          operator: "=="
+          value: 1
+    typology: rapid_movement
+
+  R-HVT-02:
+    rule_name: RAPID_OUTBOUND_EXIT
+    severity: HIGH
+    description: "Outbound wire {time_gap_hrs:.1f}h after prior txn: rapid fund exit pattern"
+    regulatory_reference: "FATF-2005 §4.1"
+    condition:
+      all:
+        - field: is_wire_out
+          operator: "=="
+          value: 1
+        - field: log_time_gap_hrs
+          operator: "<"
+          value: 3.5
+    typology: rapid_movement
+
+  # Layering rules
+  R-LYR-01:
+    rule_name: MULTI_HOP_TRANSFER
+    severity: MEDIUM
+    description: "Internal/RTGS transfer: multi-hop layering movement"
+    regulatory_reference: "FATF-2005 §3.1"
+    condition:
+      any:
+        - field: is_internal
+          operator: "=="
+          value: 1
+        - all:
+            - field: is_wire_out
+              operator: "=="
+              value: 1
+            - field: is_rtgs
+              operator: "=="
+              value: 1
+    typology: layering
+
+  R-IWT-01:
+    rule_name: INTL_WIRE_TRANSFER
+    severity: HIGH
+    description: "International wire INR {amount:.0f} to {country}: cross-border layering"
+    regulatory_reference: "FATF-RECS R.16"
+    condition:
+      field: wire_out_intl
+      operator: "=="
+      value: 1
+    typology: layering
+
+  # TBML rules
+  R-TBM-01:
+    rule_name: ROUND_AMOUNT_INTL
+    severity: HIGH
+    description: "Round INR {amount:.0f} to {country}: TBML over/under-invoicing pattern"
+    regulatory_reference: "FATF-TBML §2.2"
+    condition:
+      all:
+        - field: is_round_100k
+          operator: "=="
+          value: 1
+        - field: is_cross_border
+          operator: "=="
+          value: 1
+    typology: tbml
+
+  R-IWT-02:
+    rule_name: FATF_JURISDICTION_WIRE
+    severity: HIGH
+    description: "Wire to/from {country} (FATF risk {fatf_score:.2f}): high-risk jurisdiction"
+    regulatory_reference: "FATF-RECS R.19"
+    condition:
+      all:
+        - field: is_cross_border
+          operator: "=="
+          value: 1
+        - field: fatf_score
+          operator: ">"
+          value: 0.50
+    typology: tbml
+
+  # Cryptocurrency rules
+  R-CRYPTO-STR-01:
+    rule_name: CRYPTO_STRUCTURING_PATTERN
+    severity: HIGH
+    description: "Multiple crypto transactions below INR {threshold:.0f} structuring threshold"
+    regulatory_reference: "FATF VA Guidance"
+    condition:
+      all:
+        - field: crypto_transaction_count
+          operator: ">="
+          value: 3
+        - field: crypto_total_volume_inr
+          operator: "<"
+          value: 1000000 # Using new crypto structuring threshold
+        - field: is_crypto_structuring_pattern
+          operator: "=="
+          value: 1
+    typology: crypto_structuring
+
+  R-CRYPTO-LIQ-01:
+    rule_name: CRYPTO_RAPID_LIQUIDATION
+    severity: CRITICAL
+    description: "Rapid crypto liquidation followed by outbound wire within {hours} hours"
+    regulatory_reference: "FATF VA Guidance, FinCEN Advisory"
+    condition:
+      all:
+        - field: crypto_velocity_score
+          operator: ">"
+          value: 0.75
+        - field: rapid_crypto_fiat_conversion
+          operator: "=="
+          value: 1
+        - field: time_to_first_outbound_minutes_log
+          operator: "<"
+          value: 5.8 # log(6*60) approx 5.89, using 5.8 for consistency
+    typology: crypto_rapid_liquidation
+
+  # Threshold checks (apply to all typologies)
+  threshold_checks:
+    CTR_STRUCTURING:
+      label: "PMLA Rule 3: structuring band INR 900K-999K"
+      condition:
+        field: is_below_threshold
+        operator: "=="
+        value: 1
+
+    CTR_BREACH:
+      label: "PMLA Rule 3: CTR threshold breached (>= INR 10L)"
+      condition:
+        field: amount
+        operator: ">="
+        value: 1000000
+
+    FATF_BLACK_WIRE:
+      label: "FATF-RECS R.19: wire to/from FATF blacklisted country"
+      condition:
+        all:
+          - field: is_fatf_black
+            operator: "=="
+            value: 1
+          - any:
+              - field: is_wire_out
+                operator: "=="
+                value: 1
+              - field: is_wire_in
+                operator: "=="
+                value: 1
+
+    FATF_GREY_RAPID:
+      label: "FATF-RECS R.19: high-velocity txn with grey-list counterparty"
+      condition:
+        all:
+          - field: is_fatf_grey
+            operator: "=="
+            value: 1
+          - field: velocity_score
+            operator: ">"
+            value: 0.75
+
+    SWIFT_RAPID:
+      label: "FATF-2005 §2.2: SWIFT wire within rapid timeframe (< 3.5h gap)"
+      condition:
+        all:
+          - field: is_swift
+            operator: "=="
+            value: 1
+          - field: log_time_gap_hrs
+            operator: "<"
+            value: 3.5
+
+    ROUND_INTL:
+      label: "FATF-TBML §2.2: round-number international transaction"
+      condition:
+        all:
+          - field: is_round_100k
+            operator: "=="
+            value: 1
+          - field: is_cross_border
+            operator: "=="
+            value: 1
+
+    HIGH_VAL_RAPID:
+      label: "High-value transaction with elevated velocity score"
+      condition:
+        all:
+          - field: is_high_value_int
+            operator: "=="
+            value: 1
+          - field: velocity_score
+            operator: ">"
+            value: 0.75
+
+# ═══════════════════════════════════════════════════════════════════════════
+# NUMERIC THRESHOLDS
+# ═══════════════════════════════════════════════════════════════════════════
+# All numeric constants and thresholds used across agents
+
+numeric_thresholds:
+  # CTR (Cash Transaction Report) thresholds - PMLA Rule 3
+  ctr:
+    threshold_inr: 1000000  # INR 10 Lakh
+    structuring_band_min: 900000  # INR 9 Lakh
+    structuring_band_max: 1000000  # INR 10 Lakh
+
+  # Velocity and timing thresholds
+  velocity:
+    high_velocity_threshold: 0.75
+    rapid_time_gap_hours: 3.5
+    rapid_outbound_log_hours: 3.5
+
+  # Fund movement thresholds
+  fund_movement:
+    high_exit_ratio: 0.80
+    very_high_exit_ratio: 0.85
+    pure_transit_ratio: 0.95
+
+  # Burst score thresholds
+  burst:
+    medium_threshold: 0.60
+    high_threshold: 0.70
+    very_high_threshold: 0.90
+
+  # KYC risk thresholds - PMLA S.12A, RBI-KYC S.38
+  kyc:
+    low_threshold: 0.40
+    high_threshold: 0.70
+    edd_mandatory_threshold: 0.70
+
+  # Alert thresholds
+  alerts:
+    minimum_corroborating: 2
+    shell_company_minimum: 3
+    enrichment_trigger: 3
+    high_alert_count: 10
+
+  # Case consistency thresholds
+  consistency:
+    structuring_cv_max: 0.15  # Low CV indicates consistent sizing
+    high_cv_threshold: 0.20
+
+  # Counterparty thresholds
+  counterparties:
+    funnel_min_sources: 4  # log value 1.6 ≈ 4 sources
+    shell_min_distinct: 12  # log value 2.5 ≈ 12 counterparties
+    low_ratio_threshold: 0.30
+
+  # Round number detection
+  round_numbers:
+    modulus_100k: 100000
+    tolerance_100k: 1000
+    modulus_50k: 50000
+    tolerance_50k: 500
+
+  # FATF score thresholds
+  fatf:
+    high_risk_threshold: 0.50
+    grey_list_score: 0.75
+    black_list_score: 1.0
+    standard_score: 0.20
+
+  # Cryptocurrency thresholds
+  crypto:
+    structuring_threshold_inr: 1000000
+    rapid_liquidation_hours: 6
+
+  # Priority score thresholds (Agent 4)
+  priority:
+    urgent_threshold: 0.75
+    high_threshold: 0.50
+    medium_threshold: 0.25
+    low_threshold: 0.0
+
+  # Composite score weights (Agent 4 rule-based scoring)
+  composite_weights:
+    alert_count_weight: 0.30
+    fund_exit_ratio_weight: 0.25
+    burst_score_weight: 0.20
+    kyc_risk_score_weight: 0.15
+    high_risk_combined_weight: 0.10
+    alert_count_normalizer: 10.0  # Divide alert_count by this for 0-1 scale
+
+  # External enrichment boost values (Agent 4)
+  enrichment_boost:
+    sanctions_hit_boost: 0.15
+    negative_news_boost: 0.06
+    news_score_threshold: 0.40  # News score must exceed this to trigger boost
+
+  # Tier bin boundaries (feature_engineering.py)
+  tier_bins:
+    alert_tier:
+      bins: [-1, 0, 2, 5, 10, 999999]
+      labels: [0, 1, 2, 3, 4]
+      description: "Alert count tiers: 0 / 1-2 / 3-5 / 6-10 / >10"
+
+    kyc_risk_tier:
+      bins: [0, 0.40, 0.70, 999]
+      labels: [0, 1, 2]
+      description: "KYC risk tiers: low (<0.40) / medium (0.40-0.70) / high (>0.70)"
+
+    burst_tier:
+      bins: [0, 0.30, 0.60, 0.90, 999]
+      labels: [0, 1, 2, 3]
+      description: "Burst score tiers"
+
+    fund_exit_tier:
+      bins: [0, 0.50, 0.80, 0.95, 999]
+      labels: [0, 1, 2, 3]
+      description: "Fund exit ratio tiers: low / medium / high / pure transit (>0.95)"
+
+  # Data quality and noise parameters (fix_data.py)
+  data_quality:
+    noise_levels:
+      burst_score: 0.08
+      fund_exit_ratio: 0.08
+      kyc_risk_score: 0.08
+      counterparty_diversity_score: 0.05
+      txn_velocity: 0.05
+      alert_count: 0.15
+      account_age_days: 0.10
+
+    near_miss_degradation:
+      alert_count_multiplier_min: 0.60
+      alert_count_multiplier_max: 1.20
+      structuring_burst_mean: 0.43
+      structuring_burst_std: 0.07
+      structuring_exit_mean: 0.52
+      structuring_exit_std: 0.09
+      structuring_time_mean: 900
+      structuring_time_std: 350
+      rapid_exit_mean: 0.47
+      rapid_exit_std: 0.10
+      rapid_time_mean: 600
+      rapid_time_std: 300
+      funnel_exit_mean: 0.44
+      funnel_exit_std: 0.09
+      funnel_burst_mean: 0.40
+      funnel_burst_std: 0.08
+      tbml_exit_mean: 0.54
+      tbml_exit_std: 0.11
+      tbml_kyc_mean: 0.56
+      tbml_kyc_std: 0.10
+      shell_diversity_mean: 0.46
+      shell_diversity_std: 0.10
+      shell_burst_mean: 0.38
+      shell_burst_std: 0.09
+      shell_age_multiplier_min: 0.85
+      shell_age_multiplier_max: 1.25
+      roundtrip_time_mean: 4500
+      roundtrip_time_std: 1200
+      roundtrip_exit_mean: 0.63
+      roundtrip_exit_std: 0.10
+      roundtrip_burst_mean: 0.36
+      roundtrip_burst_std: 0.09
+
+    clip_ranges:
+      burst_score_min: 0.05
+      burst_score_max: 0.97
+      fund_exit_ratio_min: 0.10
+      fund_exit_ratio_max: 0.98
+      kyc_risk_score_min: 0.10
+      kyc_risk_score_max: 0.93
+      counterparty_diversity_min: 0.01
+      counterparty_diversity_max: 0.89
+      time_to_first_outbound_min: 5
+      time_to_first_outbound_max: 39000
+      account_age_days_min: 35
+
+  # Evidence requirements per typology (Agent 4)
+  evidence_requirements:
+    typology_structuring:
+      - feature: alert_count
+        operator: ">="
+        value: 2
+        gap_message: "Fewer than 2 corroborating alerts"
+
+      - feature: txn_amount_cv
+        operator: "<"
+        value: 0.20
+        gap_message: "Amount variation too high — structuring needs consistent sizing [FATF §2.4]"
+
+      - feature: alert_density
+        operator: ">"
+        value: 0.10
+        gap_message: "Alert density too low for structuring pattern"
+
+      - feature: fund_exit_ratio
+        operator: "<"
+        value: 0.60
+        gap_message: "Fund exit ratio >0.60 — inconsistent with deposit structuring"
+
+    typology_rapid_movement:
+      - feature: time_to_first_outbound_minutes_log
+        operator: "<"
+        value: 5.8
+        gap_message: "No rapid outbound detected (first exit > ~330 min) [FATF §2.2]"
+
+      - feature: fund_exit_ratio
+        operator: ">"
+        value: 0.80
+        gap_message: "Fund exit ratio <0.80 — insufficient pass-through evidence"
+
+      - feature: burst_score
+        operator: ">"
+        value: 0.60
+        gap_message: "Burst score <0.60 — insufficient velocity evidence"
+
+    typology_trade_based:
+      - feature: high_risk_country_flag
+        operator: "=="
+        value: 1
+        gap_message: "No high-risk country exposure [FATF-RECS R.19]"
+
+      - feature: hr_country_x_exit
+        operator: ">"
+        value: 0
+        gap_message: "No high-risk country × exit interaction [FATF-TBML §2.2]"
+
+      - feature: international_counterparty_flag
+        operator: "=="
+        value: 1
+        gap_message: "No international counterparty found"
+
+      - feature: kyc_risk_score
+        operator: ">"
+        value: 0.50
+        gap_message: "KYC risk score <0.50 — insufficient jurisdiction risk"
+
+    typology_funnel_account:
+      - feature: incoming_sources_count_log
+        operator: ">"
+        value: 1.6
+        gap_message: "Fewer than ~4 distinct incoming sources [FATF §4.1]"
+
+      - feature: fund_exit_ratio
+        operator: ">"
+        value: 0.70
+        gap_message: "Fund exit ratio <0.70"
+
+      - feature: counterparty_to_txn_ratio
+        operator: ">"
+        value: 0.30
+        gap_message: "Low counterparty-to-transaction ratio — weak fan-in signal"
+
+      - feature: alert_count
+        operator: ">="
+        value: 2
+        gap_message: "Fewer than 2 corroborating alerts"
+
+    typology_shell_company:
+      - feature: distinct_counterparties_log
+        operator: ">"
+        value: 2.5
+        gap_message: "Fewer than ~12 distinct counterparties [FATF-SHELL §3.1]"
+
+      - feature: alert_count
+        operator: ">="
+        value: 3
+        gap_message: "Fewer than 3 alerts — weak shell signal"
+
+      - feature: high_risk_country_flag
+        operator: "=="
+        value: 1
+        gap_message: "No high-risk country exposure"
+
+      - feature: pep_x_intl
+        operator: "=="
+        value: 1
+        gap_message: "No PEP + international combination"
+
+    typology_round_tripping:
+      - feature: fund_exit_ratio
+        operator: ">"
+        value: 0.85
+        gap_message: "Fund exit ratio <0.85 [FATF-SHELL §4.2]"
+
+      - feature: high_risk_country_flag
+        operator: "=="
+        value: 1
+        gap_message: "No high-risk country exposure"
+
+      - feature: time_to_first_outbound_minutes_log
+        operator: ">"
+        value: 4.0
+        gap_message: "No delayed outbound flow — round-trip needs gap"
+
+      - feature: burst_x_exit
+        operator: ">"
+        value: 0.30
+        gap_message: "Burst × exit interaction too low for round-trip"
+
+  # Completeness scoring criteria (Agent 4)
+  completeness_criteria:
+    items:
+      - feature: alert_count
+        operator: ">"
+        value: 0
+        weight: 1
+
+      - feature: alert_count
+        operator: ">"
+        value: 3
+        weight: 1
+
+      - feature: high_risk_country_flag
+        operator: "=="
+        value: 1
+        weight: 1
+
+      - feature: kyc_risk_score
+        operator: ">"
+        value: 0.70
+        weight: 1
+
+      - feature: fund_exit_ratio
+        operator: ">"
+        value: 0.80
+        weight: 1
+
+      - feature: burst_score
+        operator: ">"
+        value: 0.70
+        weight: 1
+
+      - feature: distinct_counterparties_log
+        operator: ">"
+        value: 2.0
+        weight: 1
+
+      - feature: pep_flag
+        operator: "=="
+        value: 1
+        weight: 1
+
+    # Note: sanctions_hit and critical_advisory are checked at runtime
+    max_completeness_score: 10
+
+  # Agent 4 strength classification thresholds
+  strength:
+    weak_to_medium: 0.33
+    medium_to_strong: 0.67
+
+  # MCP Gateway configuration
+  mcp:
+    request_timeout_seconds: 8
+    rate_limit_min_interval_seconds: 0.5
+    allowed_hosts:
+      - api.gnews.io
+      - api.opensanctions.org
+      - www.treasury.gov
+      - www.fatf-gafi.org
+      - rbi.org.in
+      - dev-simulated.local
+
+  # Negative news scoring parameters
+  negative_news:
+    dev_mode:
+      score_per_article: 0.35
+      score_per_keyword: 0.08
+      max_score_per_entity: 0.75
+    live_mode:
+      score_per_article: 0.30
+      score_per_keyword: 0.08
+      max_score_per_entity: 0.75
+    risk_keywords:
+      - fraud
+      - money laundering
+      - aml
+      - sanctions
+      - suspicious
+      - scam
+      - bribery
+      - corruption
+      - arrested
+      - charged
+      - convicted
+      - investigation
+      - probe
+      - fined
+      - penalty
+      - blacklist
+      - terrorist financing
+      - hawala
+      - ponzi
+      - embezzlement
+      - structuring
+
+  # Typology normalization map (Agent 3)
+  typology_normalization:
+    structuring: structuring
+    "rapid movement": rapid_movement
+    "rapid movement of funds": rapid_movement
+    rapid_movement: rapid_movement
+    "funnel account": layering
+    funnel_account: layering
+    layering: layering
+    tbml: tbml
+    "trade based": tbml
+    trade_based: tbml
+    "shell company": layering
+    shell_company: layering
+    "round tripping": tbml
+    round_tripping: tbml
+    multi: multi
+    clean: clean
+    unknown: clean
+    crypto_structuring: crypto_structuring
+    crypto_rapid_liquidation: crypto_rapid_liquidation
+
+  # Agent 4 strength label mapping
+  strength_labels:
+    0: WEAK
+    1: MEDIUM
+    2: STRONG
+
+  # Enrichment trigger conditions (Agent 4)
+  enrichment_triggers:
+    high_risk_country_flag: 1
+    pep_flag: 1
+    historical_sar_flag: 1
+    international_counterparty_flag: 1
+    alert_count_min: 3
+    agent1_confidence_min: 0.80
+
+# ═══════════════════════════════════════════════════════════════════════════
+# AGENT 5 - NARRATIVE GENERATION
+# ═══════════════════════════════════════════════════════════════════════════
+# RAG retrieval configuration for narrative generation
+
+agent5_narrative:
+  # Maps typology labels to PDF filenames in rag/docs/typology/
+  typology_file_map:
+    structuring: ["structuring.pdf", "structuring2.pdf"]
+    rapid movement of funds: ["funnel+rapid.pdf"]
+    funnel account: ["funnel accs.pdf", "funnel+rapid.pdf"]
+    tbml: ["tbml.pdf", "Trade-based-ML-062006.pdf"]
+    shell company: ["shellcompanies.pdf", "layering.pdf"]
+    round tripping: ["roundtrip.pdf"]
+    layering: ["layering.pdf"]
+
+  # Standard guidelines always retrieved
+  standard_guideline_files:
+    - PMLA_2005.pdf
+    - PMLA_Rules.pdf
+    - narrative.pdf
+    - fincenguide.pdf
+
+  # Case-specific guideline triggers
+  kyc_guideline_files:
+    - kyc.pdf
+    - rbi kyc.pdf
+
+  pep_guideline_file: pep.pdf
+
+  intl_guideline_files:
+    - Guidance-Correspondent-Banking-Services.pdf
+    - Guidance-RBA-money-value-transfer-services.pdf.coredownload.pdf
+    - A2003-15.pdf
+
+# ═══════════════════════════════════════════════════════════════════════════
+# AGENT 6 - EVALUATION & COMPLIANCE
+# ═══════════════════════════════════════════════════════════════════════════
+# Compliance evaluation rubric and regulatory memory
+
+agent6_evaluation:
+  # Stage 1 block threshold
+  stage1_block_score: 0.40
+
+  # Rubric weights (must sum to 1.0)
+  rubric_weights:
+    structural_completeness: 0.25
+    transaction_accuracy: 0.25
+    typology_alignment: 0.20
+    language_compliance: 0.20
+    semantic_coherence: 0.10
+
+  # 5W + How: mandatory SAR elements under PMLA Rule 12
+  sar_mandatory_elements:
+    WHO:
+      description: "Subject identity - full name, account number, customer type"
+      keywords: ["account", "customer", "subject", "holder", "client"]
+      regex: '\b(account\s*(no|number|#)?\.?\s*\w+|customer\s+id|name\s*:)'
+
+    WHAT:
+      description: "Nature and amount of suspicious activity"
+      keywords: ["transaction", "transfer", "deposit", "withdrawal", "wire", "amount", "inr", "₹", "lakh", "crore"]
+      regex: '(inr|₹|rs\.?)\s*[\d,]+|[\d,]+\s*(inr|lakh|crore)'
+
+    WHEN:
+      description: "Date range of suspicious activity"
+      keywords: ["on", "between", "during", "from", "date", "period"]
+      regex: '\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\w*\s+\d{1,2},?\s+\d{4}|\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}|\d{4}-\d{2}-\d{2}'
+
+    WHERE:
+      description: "Accounts, branches, channels, jurisdictions involved"
+      keywords: ["branch", "account", "channel", "swift", "rtgs", "bank", "country", "jurisdiction", "international"]
+      regex: '\b(branch|swift|rtgs|neft|imps|upi|channel)\b'
+
+    HOW:
+      description: "Method used - cash, wire, structuring pattern, layering route"
+      keywords: ["structured", "wired", "transferred", "deposited", "split", "layered", "funnelled", "routed", "through"]
+      regex: '\b(structur|wire|transfer|deposit|withdraw|layer|funnel|route|pass.through)\w*'
+
+    WHY:
+      description: "Red flags - specific reasons why activity is suspicious"
+      keywords: ["suspicious", "unusual", "inconsistent", "below threshold", "velocity", "high risk", "flagged", "anomaly", "pattern"]
+      regex: '\b(suspicious|unusual|inconsistent|flag|alert|anomal|threshold|velocity|high.risk)\w*'
+
+  # Prohibited / speculative language patterns [FIU-IND Filing Guidelines §4.3]
+  prohibited_patterns:
+    - pattern: '\bmay have\b'
+      reason: "Speculative: 'may have'"
+    - pattern: '\bpossibly\b'
+      reason: "Speculative: 'possibly'"
+    - pattern: '\bcould be\b'
+      reason: "Speculative: 'could be'"
+    - pattern: '\bwe believe\b'
+      reason: "Opinion: 'we believe'"
+    - pattern: '\bit appears\b'
+      reason: "Speculative: 'it appears'"
+    - pattern: '\bsuspect that\b'
+      reason: "Speculative: 'suspect that'"
+    - pattern: '\bpotentially\b'
+      reason: "Speculative: 'potentially'"
+    - pattern: '\bmight be\b'
+      reason: "Speculative: 'might be'"
+    - pattern: '\bseems to\b'
+      reason: "Speculative: 'seems to'"
+    - pattern: '\bwe think\b'
+      reason: "Opinion: 'we think'"
+    - pattern: '\bin our opinion\b'
+      reason: "Opinion: 'in our opinion'"
+    - pattern: '\ballegedly\b'
+      reason: "Unverified: 'allegedly'"
+    - pattern: '\bperhaps\b'
+      reason: "Speculative: 'perhaps'"
+    - pattern: '\bapparently\b'
+      reason: "Speculative: 'apparently'"
+    - pattern: '\bif true\b'
+      reason: "Speculative: 'if true'"
+    - pattern: '\bseemingly\b'
+      reason: "Speculative: 'seemingly'"
+
+  # Per-typology required narrative elements
+  typology_required_elements:
+    structuring: ["deposit", "threshold", "consistent", "INR 10"]
+    rapid_movement: ["exit", "swift", "within", "velocity"]
+    layering: ["hop", "internal", "layer"]
+    tbml: ["invoice", "international", "country", "round"]
+    funnel_account: ["source", "consolidat", "exit"]
+    shell_company: ["beneficial", "opaque", "structure"]
+    round_tripping: ["remit", "return", "foreign"]
+    multi: ["deposit", "threshold", "exit", "velocity"]
+    clean: []
+
+  # Approved narrative patterns (templates)
+  approved_narrative_patterns:
+    structuring: "The subject, [Name], holding account [Account No.] at [Branch], made [N] cash deposits between [Date1] and [Date2], each ranging from INR [min] to INR [max] - all below the INR 10,00,000 CTR reporting threshold. The coefficient of variation of deposit amounts was [CV], consistent with deliberate structuring to avoid mandatory reporting under PMLA Rule 3. A total of INR [total] was deposited across [N] transactions, with no corresponding business purpose provided. [N_alerts] automated alerts were triggered under rule [rule_id]."
+
+    rapid_movement: "Account [Account No.], held by [Name], received INR [amount] via [Channel] on [Date]. The funds were fully transferred via SWIFT wire to [Counterparty] in [Country] within [hours] hours, yielding a fund exit ratio of [ratio]. This rapid pass-through pattern is inconsistent with the account's declared business profile and indicative of layering consistent with FATF Recommendation 20. Velocity score at time of transfer was [score]."
+
+    tbml: "The account held by [Entity], a [Customer Type], executed [N] international wire transfers totalling INR [amount] to [Country], a jurisdiction on the FATF grey/blacklist. Transfer amounts were round denominations of INR [round_amount], inconsistent with arm's-length commercial invoicing. No trade documentation was presented to the reporting institution. The pattern is consistent with trade-based money laundering as described in FATF Trade-Based Money Laundering 2006 §2.2."
+
+    funnel_account: "Account [Account No.] received credits from [N] distinct originating accounts across [N_banks] financial institutions over [period]. Cumulative inflows of INR [total] were consolidated and disbursed via [channel] within [hours] hours, with a fund exit ratio of [ratio]. The pattern, involving [N] distinct incoming sources, is consistent with a funnel or mule account arrangement as characterised by FIU-IND Typology Report 2024."
+
+    # CRYPTO-SPECIFIC NARRATIVE TEMPLATES
+    crypto_structuring: "The subject, [Name], holding account [Account No.] at [Branch], executed [N] cryptocurrency transactions between [Date1] and [Date2] through digital asset exchanges, each ranging from INR [min] to INR [max] - all structured below the INR 10,00,000 reporting threshold. The cryptocurrency transactions totaled INR [crypto_total] across [crypto_count] digital asset transfers with a coefficient of variation of [CV], indicating deliberate structuring to evade PMLA reporting requirements. The crypto velocity score of [crypto_velocity] and consistent transaction sizing pattern are consistent with cryptocurrency-based structuring as outlined in FATF Virtual Asset Guidance Chapter 4. [N_alerts] automated alerts were triggered under crypto monitoring rule [rule_id]."
+
+    crypto_rapid_liquidation: "Account [Account No.], held by [Name], received INR [crypto_total] via cryptocurrency exchanges on [Date]. The digital assets were rapidly converted to fiat currency and transferred via SWIFT wire to [Counterparty] in [Country] within [hours] hours, yielding a crypto velocity score of [crypto_velocity] and fund exit ratio of [ratio]. This rapid crypto-to-fiat liquidation pattern followed by immediate outbound wire transfer is consistent with cryptocurrency-based layering techniques as described in FATF Virtual Asset Guidance and FinCEN Advisory FIN-2021-A004. The pattern indicates potential use of cryptocurrency to obscure fund origins before traditional banking exit."
+
+# ═══════════════════════════════════════════════════════════════════════════
+# MASKING AGENT CONFIGURATION
+# ═══════════════════════════════════════════════════════════════════════════
+# PII field registry for masking/unmasking operations
+
+masking:
+  # Customer PII fields (structured_case["customer"])
+  customer_pii_fields:
+    full_name: NAME
+    dob_or_incorp_date: DOB
+
+  # Account PII fields (structured_case["accounts"])
+  account_pii_fields:
+    account_number: ACCOUNT
+
+  # Transaction PII fields (structured_case["transactions"])
+  transaction_pii_fields:
+    counterparty_name: NAME
+    counterparty_account: ACCOUNT
+
+  # Token pattern for validation (regex)
+  token_pattern: '<(?:NAME|DOB|ACCOUNT)_[0-9A-F]{8}>'
+
+  # Token generation settings
+  token_settings:
+    uuid_suffix_length: 8
+    max_token_creation_attempts: 5
