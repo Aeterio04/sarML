@@ -1,0 +1,14 @@
+account_id,customer_id,account_number,account_type,currency,bank_name,bank_country,open_date,status,balance_at_flag,txn_id,txn_datetime,txn_type,amount,direction,counterparty_name,counterparty_account,counterparty_country,swift_message_type,is_cash,round_amount_flag,channel
+ACC-S001,CUS-F002,AC-1100221,retail,INR,HDFC Bank,India,2020-04-01,active,8500.00,TXN-1001,2024-03-10 09:15:00,ach,85000.00,debit,Ravi Shankar Enterprises,AC-9988001,India,,false,false,online
+ACC-S002,CUS-F003,AC-1100332,retail,INR,HDFC Bank,India,2021-08-15,active,3200.00,TXN-1002,2024-03-10 09:45:00,ach,60000.00,debit,Ravi Shankar Enterprises,AC-9988001,India,,false,true,online
+ACC-S003,CUS-F004,AC-1100443,retail,INR,Axis Bank,India,2019-12-10,active,14200.00,TXN-1003,2024-03-10 10:00:00,cash,45000.00,debit,Ravi Shankar Enterprises,AC-9988001,India,,true,false,branch
+ACC-S003,CUS-F004,AC-1100443,retail,INR,Axis Bank,India,2019-12-10,active,14200.00,TXN-1004,2024-03-10 10:30:00,cash,48000.00,debit,Ravi Shankar Enterprises,AC-9988001,India,,true,false,branch
+ACC-S004,CUS-F005,AC-1100554,retail,INR,ICICI Bank,India,2022-01-25,active,6100.00,TXN-1005,2024-03-10 10:45:00,ach,72000.00,debit,Ravi Shankar Enterprises,AC-9988001,India,,false,false,online
+ACC-S004,CUS-F005,AC-1100554,retail,INR,ICICI Bank,India,2022-01-25,active,6100.00,TXN-1006,2024-03-10 11:15:00,ach,68000.00,debit,Ravi Shankar Enterprises,AC-9988001,India,,false,false,online
+ACC-F001,CUS-F001,AC-9988001,corporate,INR,HDFC Bank,India,2018-06-15,active,412000.00,TXN-1007,2024-03-10 09:15:00,ach,85000.00,credit,Deepak Malhotra,AC-1100221,India,,false,false,online
+ACC-F001,CUS-F001,AC-9988001,corporate,INR,HDFC Bank,India,2018-06-15,active,412000.00,TXN-1008,2024-03-10 09:45:00,ach,60000.00,credit,Sunita Rao,AC-1100332,India,,false,true,online
+ACC-F001,CUS-F001,AC-9988001,corporate,INR,HDFC Bank,India,2018-06-15,active,412000.00,TXN-1009,2024-03-10 10:00:00,cash,45000.00,credit,Mohammed Irfan,AC-1100443,India,,true,false,branch
+ACC-F001,CUS-F001,AC-9988001,corporate,INR,HDFC Bank,India,2018-06-15,active,412000.00,TXN-1010,2024-03-10 10:30:00,cash,48000.00,credit,Mohammed Irfan,AC-1100443,India,,true,false,branch
+ACC-F001,CUS-F001,AC-9988001,corporate,INR,HDFC Bank,India,2018-06-15,active,412000.00,TXN-1011,2024-03-10 10:45:00,ach,72000.00,credit,Kavitha Nambiar,AC-1100554,India,,false,false,online
+ACC-F001,CUS-F001,AC-9988001,corporate,INR,HDFC Bank,India,2018-06-15,active,412000.00,TXN-1012,2024-03-10 11:15:00,ach,68000.00,credit,Kavitha Nambiar,AC-1100554,India,,false,false,online
+ACC-F001,CUS-F001,AC-9988001,corporate,INR,HDFC Bank,India,2018-06-15,active,412000.00,TXN-1013,2024-03-10 14:30:00,wire,420000.00,debit,Gulf Trade LLC,AE-7700991,UAE,MT103,false,true,wire

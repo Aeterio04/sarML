@@ -1,0 +1,3 @@
+alert_id,case_id,account_id,rule_name,alert_scenario,risk_score,previous_alert_count,triggered_at,status
+ALT-RMF-001,CASE-2024-0103,ACC-RMF-001,Large inbound credits followed by immediate international wire,rapid_movement,93.2,0,2024-05-20 14:00:00,new
+ALT-RMF-002,CASE-2024-0103,ACC-RMF-001,Fund exit ratio exceeds 0.90 — pass-through pattern,rapid_movement,87.6,0,2024-05-20 14:05:00,new

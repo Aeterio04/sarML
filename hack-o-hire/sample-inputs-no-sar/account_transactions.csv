@@ -1,0 +1,6 @@
+account_id,customer_id,account_number,account_type,currency,bank_name,bank_country,open_date,status,balance_at_flag,txn_id,txn_datetime,txn_type,amount,direction,counterparty_name,counterparty_account,counterparty_country,swift_message_type,is_cash,round_amount_flag,channel
+ACC-CLN-001,CUS-CLN-001,AC-5500441,savings,INR,Bank of Maharashtra,India,2010-05-10,active,210000.00,TXN-5001,2024-07-01 09:00:00,ach,85000.00,credit,State Govt Maharashtra Payroll,GOV-PAY-001,India,,false,false,online
+ACC-CLN-001,CUS-CLN-001,AC-5500441,savings,INR,Bank of Maharashtra,India,2010-05-10,active,210000.00,TXN-5002,2024-07-03 11:30:00,upi,1200.00,debit,Maharashtra Electricity Board,MSEB-UPI-001,India,,false,false,online
+ACC-CLN-001,CUS-CLN-001,AC-5500441,savings,INR,Bank of Maharashtra,India,2010-05-10,active,210000.00,TXN-5003,2024-07-05 19:45:00,upi,3500.00,debit,Big Bazaar Pune,BB-UPI-002,India,,false,false,online
+ACC-CLN-001,CUS-CLN-001,AC-5500441,savings,INR,Bank of Maharashtra,India,2010-05-10,active,210000.00,TXN-5004,2024-07-10 14:00:00,ach,50000.00,debit,Ramesh Desai,AC-6600551,India,,false,false,online
+ACC-CLN-001,CUS-CLN-001,AC-5500441,savings,INR,Bank of Maharashtra,India,2010-05-10,active,210000.00,TXN-5005,2024-07-15 10:20:00,upi,800.00,debit,Swiggy,SWGY-UPI-003,India,,false,false,online

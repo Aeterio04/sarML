@@ -1,0 +1,23 @@
+[
+  {
+    "customer_id": "CUS-RMF-002",
+    "account_id": "ACC-RMF-002",
+    "full_name": "Arjun Krishnamurthy",
+    "customer_type": "individual",
+    "nationality": "Indian",
+    "country_of_residence": "India",
+    "occupation": "Freelance Consultant",
+    "date_of_birth": "1991-09-04",
+    "kyc_tier": "standard",
+    "kyc_last_reviewed_date": "2024-01-20",
+    "source_of_funds": "Consultancy Income",
+    "source_of_wealth": "Freelance Work",
+    "pep_flag": false,
+    "pep_category": null,
+    "sanctions_flag": false,
+    "adverse_media_flag": false,
+    "risk_rating": "high",
+    "previous_sar_count": 1,
+    "customer_since": "2024-01-10"
+  }
+]
