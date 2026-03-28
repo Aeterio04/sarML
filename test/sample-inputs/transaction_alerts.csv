@@ -1,0 +1,6 @@
+alert_id,case_id,account_id,rule_name,alert_scenario,risk_score,previous_alert_count,triggered_at,status
+ALT-F001,CASE-2024-0101,ACC-F001,Multiple inbound sources consolidated and exited,funnel_account,91.4,1,2024-03-10 17:45:00,new
+ALT-F002,CASE-2024-0101,ACC-S001,Unusual outbound transfer to unknown account,funnel_account,74.2,0,2024-03-10 16:30:00,new
+ALT-F003,CASE-2024-0101,ACC-S002,High-value transfer inconsistent with profile,funnel_account,71.8,0,2024-03-10 16:45:00,new
+ALT-F004,CASE-2024-0101,ACC-S003,Structuring behaviour — multiple below-threshold transfers,funnel_account,68.5,1,2024-03-10 17:00:00,new
+ALT-F005,CASE-2024-0101,ACC-S004,Same-day transfer to flagged account,funnel_account,66.1,0,2024-03-10 17:10:00,new

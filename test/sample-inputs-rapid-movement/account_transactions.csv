@@ -1,0 +1,5 @@
+account_id,customer_id,account_number,account_type,currency,bank_name,bank_country,open_date,status,balance_at_flag,txn_id,txn_datetime,txn_type,amount,direction,counterparty_name,counterparty_account,counterparty_country,swift_message_type,is_cash,round_amount_flag,channel
+ACC-RMF-001,CUS-RMF-001,AC-3300221,current,INR,HDFC Bank,India,2016-03-15,active,180000.00,TXN-3001,2024-05-20 09:10:00,rtgs,1500000.00,credit,Sharma Fabrics Ltd,AC-4411001,India,,false,false,online
+ACC-RMF-001,CUS-RMF-001,AC-3300221,current,INR,HDFC Bank,India,2016-03-15,active,180000.00,TXN-3002,2024-05-20 09:45:00,rtgs,1400000.00,credit,Gupta Traders,AC-4411002,India,,false,false,online
+ACC-RMF-001,CUS-RMF-001,AC-3300221,current,INR,HDFC Bank,India,2016-03-15,active,180000.00,TXN-3003,2024-05-20 10:30:00,rtgs,1300000.00,credit,Mehta Exports,AC-4411003,India,,false,false,online
+ACC-RMF-001,CUS-RMF-001,AC-3300221,current,INR,HDFC Bank,India,2016-03-15,active,180000.00,TXN-3004,2024-05-20 13:15:00,wire,4050000.00,debit,Gulf Commodities LLC,AE-9900441,UAE,MT103,false,true,wire

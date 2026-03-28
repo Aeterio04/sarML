@@ -1,0 +1,15 @@
+{
+  "case_id": "CASE-2024-0102",
+  "status": "under_review",
+  "priority": "high",
+  "jurisdiction": "India",
+  "typology_guess": "structuring",
+  "sar_worthy": null,
+  "assigned_to": "analyst_arjun",
+  "created_at": "2024-04-15T10:00:00Z",
+  "primary_account_id": "ACC-STR-001",
+  "related_account_ids": [],
+  "customer_ids": ["CUS-STR-001"],
+  "alert_ids": ["ALT-STR-001", "ALT-STR-002", "ALT-STR-003"],
+  "notes": "Individual customer making repeated cash deposits just below the INR 10L CTR threshold across 6 transactions over 18 days. Amounts are suspiciously consistent — ranging from INR 9.1L to INR 9.8L. Customer declared occupation is a salaried employee with monthly income of INR 80,000. Transaction volumes are wholly inconsistent with declared income."
+}

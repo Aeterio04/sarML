@@ -1,0 +1,15 @@
+{
+  "case_id": "CASE-2024-0106",
+  "status": "under_review",
+  "priority": "high",
+  "jurisdiction": "India",
+  "typology_guess": "trade_based",
+  "sar_worthy": true,
+  "assigned_to": "Chirag Patil",
+  "created_at": "2024-08-05T09:00:00Z",
+  "primary_account_id": "ACC-TBM-002",
+  "related_account_ids": [],
+  "customer_ids": ["CUS-TBM-002"],
+  "alert_ids": ["ALT-TBM2-001", "ALT-TBM2-002", "ALT-TBM2-003", "ALT-TBM2-004", "ALT-TBM2-005"],
+  "notes": "Corporate import-export entity making 8 outward SWIFT remittances to a single counterparty in Iran (FATF blacklist) over 6 weeks. All amounts are exact round numbers — INR 20L, INR 25L, INR 20L, INR 25L alternating. No trade invoices or shipping documents presented. Customer declared business is spice exports to Southeast Asia — no stated business relationship with Iran. Total outflow INR 1.8Cr. Adverse media flag active. Previous SAR filed 14 months ago for similar pattern."
+}

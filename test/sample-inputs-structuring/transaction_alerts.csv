@@ -1,0 +1,4 @@
+alert_id,case_id,account_id,rule_name,alert_scenario,risk_score,previous_alert_count,triggered_at,status
+ALT-STR-001,CASE-2024-0102,ACC-STR-001,Repeated sub-threshold cash deposits,structuring,88.5,0,2024-04-18 18:00:00,new
+ALT-STR-002,CASE-2024-0102,ACC-STR-001,Transaction amount inconsistent with declared income,structuring,82.1,0,2024-04-18 18:05:00,new
+ALT-STR-003,CASE-2024-0102,ACC-STR-001,High cash deposit frequency — 6 in 18 days,structuring,79.4,0,2024-04-18 18:10:00,new

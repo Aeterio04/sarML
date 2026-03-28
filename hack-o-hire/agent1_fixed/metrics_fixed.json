@@ -1,0 +1,96 @@
+{
+  "feature_selection": {
+    "method": "per_label_MI_union_train_only",
+    "top_n_per_label": 8,
+    "labels_used": [
+      "sar_worthy",
+      "typology_structuring",
+      "typology_rapid_movement",
+      "typology_funnel_account",
+      "typology_trade_based",
+      "typology_shell_company",
+      "typology_round_tripping"
+    ],
+    "n_features_selected": 25,
+    "selected_features": [
+      "avg_txn_amount",
+      "avg_txn_amount_cbrt",
+      "burst_per_age",
+      "burst_score",
+      "burst_tier",
+      "burst_x_exit",
+      "counterparty_diversity_score",
+      "diversity_x_sources",
+      "fund_exit_ratio",
+      "fund_exit_tier",
+      "hr_country_x_exit",
+      "incoming_sources_count",
+      "incoming_sources_count_log",
+      "max_txn_amount",
+      "max_txn_amount_cbrt",
+      "min_txn_amount",
+      "min_txn_amount_cbrt",
+      "std_txn_amount",
+      "std_txn_amount_cbrt",
+      "time_to_first_outbound_minutes",
+      "time_to_first_outbound_minutes_log",
+      "txn_count",
+      "txn_count_log",
+      "txn_velocity",
+      "txn_velocity_log"
+    ]
+  },
+  "model_performance": {
+    "hamming_loss": 0.026,
+    "macro_f1": 0.9027,
+    "per_label": {
+      "sar_worthy": {
+        "f1": 0.9451,
+        "auc": 0.991,
+        "precision": 0.9397,
+        "recall": 0.9505
+      },
+      "typology_structuring": {
+        "f1": 0.9596,
+        "auc": 0.9992,
+        "precision": 0.9406,
+        "recall": 0.9794
+      },
+      "typology_rapid_movement": {
+        "f1": 0.902,
+        "auc": 0.996,
+        "precision": 0.902,
+        "recall": 0.902
+      },
+      "typology_funnel_account": {
+        "f1": 0.9767,
+        "auc": 0.9991,
+        "precision": 0.9767,
+        "recall": 0.9767
+      },
+      "typology_trade_based": {
+        "f1": 0.8235,
+        "auc": 0.9865,
+        "precision": 0.7857,
+        "recall": 0.8652
+      },
+      "typology_shell_company": {
+        "f1": 0.7429,
+        "auc": 0.9831,
+        "precision": 0.7027,
+        "recall": 0.7879
+      },
+      "typology_round_tripping": {
+        "f1": 0.9692,
+        "auc": 0.9998,
+        "precision": 0.9692,
+        "recall": 0.9692
+      }
+    }
+  },
+  "splits": {
+    "train": 4900,
+    "val": 1050,
+    "test": 1050
+  }
+}

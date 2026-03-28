@@ -1,0 +1,15 @@
+{
+  "case_id": "CASE-2024-0107",
+  "status": "under_review",
+  "priority": "high",
+  "jurisdiction": "India",
+  "typology_guess": "rapid_movement",
+  "sar_worthy": true,
+  "assigned_to": "Chirag Patil",
+  "created_at": "2024-09-15T08:00:00Z",
+  "primary_account_id": "ACC-RMF-002",
+  "related_account_ids": [],
+  "customer_ids": ["CUS-RMF-002"],
+  "alert_ids": ["ALT-RMF2-001", "ALT-RMF2-002", "ALT-RMF2-003", "ALT-RMF2-004", "ALT-RMF2-005"],
+  "notes": "Individual account received INR 85L across 5 RTGS credits from 5 different domestic sources within a 3-hour window on the same day. Within 90 minutes of the last credit, INR 83L was wired via SWIFT MT103 to a counterparty in Myanmar (FATF blacklist). Residual balance INR 2L. Fund exit ratio 0.976. Account is 8 months old. Customer declared occupation is a freelance consultant with declared monthly income of INR 1.2L — wholly inconsistent with INR 85L single-day throughput. No prior business relationship with Myanmar counterparty on record."
+}

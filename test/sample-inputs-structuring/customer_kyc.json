@@ -1,0 +1,23 @@
+[
+  {
+    "customer_id": "CUS-STR-001",
+    "account_id": "ACC-STR-001",
+    "full_name": "Prakash Verma",
+    "customer_type": "individual",
+    "nationality": "Indian",
+    "country_of_residence": "India",
+    "occupation": "Salaried Employee",
+    "date_of_birth": "1985-03-12",
+    "kyc_tier": "standard",
+    "kyc_last_reviewed_date": "2023-06-01",
+    "source_of_funds": "Salary",
+    "source_of_wealth": "Employment",
+    "pep_flag": false,
+    "pep_category": null,
+    "sanctions_flag": false,
+    "adverse_media_flag": false,
+    "risk_rating": "medium",
+    "previous_sar_count": 0,
+    "customer_since": "2019-01-10"
+  }
+]

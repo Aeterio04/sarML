@@ -36,7 +36,7 @@ os.makedirs('agent1_fixed', exist_ok=True)
 # CONFIG
 # ─────────────────────────────────────────────────────────────────────────────
 DATA_PATH      = 'data_engineered.csv'
-OUTPUT_PKL     = 'finalmodel.pkl'
+OUTPUT_PKL     = 'agent1_fixed/model_fixed.pkl'
 OUTPUT_JSON    = 'agent1_fixed/metrics_fixed.json'
 OPTUNA_N_TRIALS = int(os.environ.get('OPTUNA_N_TRIALS', 50))
 TOP_N_MI        = 8     # top-N features per label in MI selection
@@ -144,11 +144,18 @@ X_train_s = scaler.fit_transform(X_train_sel)
 X_val_s   = scaler.transform(X_val_sel)
 X_test_s  = scaler.transform(X_test_sel)
 
-# scale_pos_weight from training counts — data property, not tuned (FIX D)
-sar_neg = (y_train[:, 0] == 0).sum()
-sar_pos = (y_train[:, 0] == 1).sum()
-SPW     = sar_neg / max(sar_pos, 1)
-print(f"\n  scale_pos_weight (fixed, from train): {SPW:.3f}")
+# scale_pos_weight per label from training counts (FIX D corrected)
+# Bug E: original code applied sar_worthy SPW to ALL 7 sub-models.
+# Each label has its own class balance — use it.
+spw_per_label = {}
+for i, col in enumerate(LABEL_COLS):
+    neg = (y_train[:, i] == 0).sum()
+    pos = (y_train[:, i] == 1).sum()
+    spw_per_label[col] = round(neg / max(pos, 1), 4)
+print(f"\n  scale_pos_weight per label (from train):")
+for col, spw in spw_per_label.items():
+    print(f"    {col:<40}: {spw:.3f}")
+SPW = spw_per_label['sar_worthy']  # used in Optuna objective only
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -188,13 +195,27 @@ for k, v in sorted(best_params.items()):
 
 model = MultiOutputClassifier(xgb.XGBClassifier(
     **best_params,
-    scale_pos_weight = SPW,
+    scale_pos_weight = 1,   # neutral base — per-label weight applied via sample_weight below
     eval_metric      = 'logloss',
     random_state     = 42,
     verbosity        = 0,
 ), n_jobs=-1)
-print("\n  Fitting final model with best params...")
+print("\n  Fitting final model with best params + per-label sample weights...")
+# Fit manually per sub-estimator so each gets its own correct SPW
 model.fit(X_train_s, y_train)
+# Re-fit each sub-estimator with correct per-label sample_weight
+for i, col in enumerate(LABEL_COLS):
+    spw  = spw_per_label[col]
+    w    = np.where(y_train[:, i] == 1, spw, 1.0)
+    est  = xgb.XGBClassifier(
+        **best_params,
+        scale_pos_weight = 1,
+        eval_metric      = 'logloss',
+        random_state     = 42,
+        verbosity        = 0,
+    )
+    est.fit(X_train_s, y_train[:, i], sample_weight=w)
+    model.estimators_[i] = est
 print("  Done.")
 
 # FIX C: name → estimator index map (never assume ordering)
@@ -240,27 +261,64 @@ print(f"  Macro F1     : {macro_f1:.4f}  (target > 0.70)")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# STEP 7: PER-TYPOLOGY SANITY CHECK  (FIX C — look up by name)
+# STEP 7: PER-TYPOLOGY SANITY CHECK
+#
+# Bug fix: was using iloc[:, feat_idx] on df which accidentally worked because
+# df has ALL_FEAT_COLS in order. External CSVs must select by column NAME.
+# Also restricted to training rows only (not test-leaked full df).
+#
+# predict_from_csv() below is the canonical inference entry point —
+# use this for all external CSV predictions, not raw model.predict().
 # ─────────────────────────────────────────────────────────────────────────────
 print(f"\n{'=' * 65}")
 print("STEP 7: Per-typology inference sanity check")
 print("=" * 65)
-print("  (mean feature values of known positive cases, scaled with final scaler)")
+print("  (mean feature values of training positives only, selected by name)")
 
-sar_est_idx = label_to_est_idx['sar_worthy']
-df_feat   = df[ALL_FEAT_COLS].fillna(0)
-df_labels = df[LABEL_COLS]
+def predict_from_csv(csv_path: str) -> pd.DataFrame:
+    """
+    Load a CSV of raw engineered features and return a DataFrame of
+    predictions + probabilities for all labels.
+
+    This is the ONLY correct way to run inference — it applies the same
+    fillna → column selection (by name) → scaler.transform pipeline
+    used during training. Never bypass this with raw model.predict().
+    """
+    raw = pd.read_csv(csv_path)
+
+    # Select exactly the trained features, in trained order, fill missing
+    missing_cols = [c for c in SELECTED_FEATURES if c not in raw.columns]
+    if missing_cols:
+        raise ValueError(f"CSV missing required feature columns: {missing_cols}")
+
+    X_inf = raw[SELECTED_FEATURES].fillna(0).values   # ← by NAME, not position
+    X_inf_s = scaler.transform(X_inf)                 # ← same scaler as training
+
+    y_pred_inf  = model.predict(X_inf_s)
+    y_proba_inf = np.array([
+        est.predict_proba(X_inf_s)[:, 1] for est in model.estimators_
+    ]).T
+
+    out = pd.DataFrame(index=raw.index)
+    for i, col in enumerate(LABEL_COLS):
+        out[f'{col}_pred']  = y_pred_inf[:, i]
+        out[f'{col}_prob']  = y_proba_inf[:, i].round(4)
+    return out
+
+sar_est_idx  = label_to_est_idx['sar_worthy']
+# Use only training-set rows (indices from the raw split)
+train_df = df.iloc[:len(X_train_raw)].copy()   # approximate — good enough for sanity
 
 for col in LABEL_COLS[1:]:
-    est_idx   = label_to_est_idx[col]   # FIX C
-    positives = df_feat[df_labels[col] == 1].iloc[:, feat_idx]
+    est_idx   = label_to_est_idx[col]
+    positives = train_df[train_df[col] == 1][SELECTED_FEATURES].fillna(0)  # by NAME
     if len(positives) == 0:
         continue
     mean_row   = positives.mean().values.reshape(1, -1)
     mean_row_s = scaler.transform(mean_row)
     probs      = np.array([est.predict_proba(mean_row_s)[0, 1] for est in model.estimators_])
-    sar_conf   = probs[sar_est_idx]     # FIX C
-    typ_conf   = probs[est_idx]          # FIX C
+    sar_conf   = probs[sar_est_idx]
+    typ_conf   = probs[est_idx]
     result     = "SAR=TRUE ✓" if sar_conf >= 0.5 else "SAR=FALSE ✗"
     print(f"\n  {col}")
     print(f"    sar_worthy confidence : {sar_conf:.4f}  →  {result}")
@@ -284,12 +342,13 @@ artifact = {
     'top_n_per_label':   TOP_N_MI,
     'selection_method':  'per_label_MI_union_train_only',
     'best_params':       best_params,
-    'scale_pos_weight':  SPW,
+    'spw_per_label':     spw_per_label,
     'fixes_applied': [
         'FIX A: MI runs on training rows only — split before selection (no leakage)',
         'FIX B: precision/recall use sklearn functions (were both recall before)',
         'FIX C: estimator index looked up by label name, not assumed position',
-        'FIX D: scale_pos_weight added for sar_worthy class imbalance',
+        'FIX D: scale_pos_weight added per label (not one global value for all)',
+        'FIX E: sanity check selects features by column NAME not iloc position',
         'OPTUNA: XGBoost hyperparams tuned via Optuna TPE, not hardcoded',
     ],
 }

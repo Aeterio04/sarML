@@ -1,0 +1,15 @@
+{
+  "case_id": "CASE-2024-0105",
+  "status": "under_review",
+  "priority": "low",
+  "jurisdiction": "India",
+  "typology_guess": "clean",
+  "sar_worthy": null,
+  "assigned_to": "analyst_priya",
+  "created_at": "2024-07-05T08:00:00Z",
+  "primary_account_id": "ACC-CLN-001",
+  "related_account_ids": [],
+  "customer_ids": ["CUS-CLN-001"],
+  "alert_ids": ["ALT-CLN-001"],
+  "notes": "Salaried government employee receiving monthly salary credits of INR 85,000 from a single employer (State Government of Maharashtra). Occasional small UPI payments to utility providers and grocery stores. One NEFT transfer of INR 50,000 to a family member. All transactions consistent with declared income and lifestyle. Alert triggered by a system rule on accounts with salary credits above INR 50,000 — rule is known to generate false positives for government employees. No suspicious indicators identified."
+}

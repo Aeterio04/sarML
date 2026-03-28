@@ -1,0 +1,7 @@
+account_id,customer_id,account_number,account_type,currency,bank_name,bank_country,open_date,status,balance_at_flag,txn_id,txn_datetime,txn_type,amount,direction,counterparty_name,counterparty_account,counterparty_country,swift_message_type,is_cash,round_amount_flag,channel
+ACC-STR-001,CUS-STR-001,AC-2200111,savings,INR,SBI,India,2019-01-15,active,42000.00,TXN-2001,2024-04-01 11:20:00,cash,910000.00,credit,CASH DEPOSIT,,India,,true,false,branch
+ACC-STR-001,CUS-STR-001,AC-2200111,savings,INR,SBI,India,2019-01-15,active,42000.00,TXN-2002,2024-04-03 14:05:00,cash,950000.00,credit,CASH DEPOSIT,,India,,true,false,branch
+ACC-STR-001,CUS-STR-001,AC-2200111,savings,INR,SBI,India,2019-01-15,active,42000.00,TXN-2003,2024-04-06 09:45:00,cash,930000.00,credit,CASH DEPOSIT,,India,,true,false,branch
+ACC-STR-001,CUS-STR-001,AC-2200111,savings,INR,SBI,India,2019-01-15,active,42000.00,TXN-2004,2024-04-09 16:30:00,cash,980000.00,credit,CASH DEPOSIT,,India,,true,false,branch
+ACC-STR-001,CUS-STR-001,AC-2200111,savings,INR,SBI,India,2019-01-15,active,42000.00,TXN-2005,2024-04-12 10:15:00,cash,920000.00,credit,CASH DEPOSIT,,India,,true,false,branch
+ACC-STR-001,CUS-STR-001,AC-2200111,savings,INR,SBI,India,2019-01-15,active,42000.00,TXN-2006,2024-04-18 13:50:00,cash,960000.00,credit,CASH DEPOSIT,,India,,true,false,branch

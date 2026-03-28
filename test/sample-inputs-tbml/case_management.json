@@ -1,0 +1,15 @@
+{
+  "case_id": "CASE-2024-0104",
+  "status": "under_review",
+  "priority": "high",
+  "jurisdiction": "India",
+  "typology_guess": "trade_based",
+  "sar_worthy": null,
+  "assigned_to": "Chirag Patil",
+  "created_at": "2024-06-10T11:00:00Z",
+  "primary_account_id": "ACC-TBM-001",
+  "related_account_ids": [],
+  "customer_ids": ["CUS-TBM-001"],
+  "alert_ids": ["ALT-TBM-001", "ALT-TBM-002", "ALT-TBM-003"],
+  "notes": "Import-export company making repeated round-number outward remittances to a counterparty in Nigeria (FATF grey-list). Amounts are INR 5L, INR 10L, INR 5L, INR 10L — alternating pattern inconsistent with genuine trade invoicing. No corresponding import documentation presented to the bank. Counterparty is registered in Lagos with no verifiable trade history. Total outflow of INR 30L over 3 weeks."
+}

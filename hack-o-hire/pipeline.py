@@ -24,7 +24,7 @@ from feature_engineering import run_feature_engineering
 
 _HERE = Path(__file__).parent
 _FINAL_CSV = _HERE / "final_predictions.csv"
-_MODEL_PKL = _HERE / "model.pkl"
+_MODEL_PKL = _HERE / "agent1_fixed" / "model_fixed.pkl"
 
 # We include the inference logic directly so this script stands entirely alone 
 # and doesn't rely on side-effects or path traversals.
@@ -39,30 +39,35 @@ def run_model_inference(input_df: pd.DataFrame, model_path: Path) -> pd.DataFram
     print(f"  Loading model from {model_path}...")
     artifact = joblib.load(model_path)
     
-    fitted_models = artifact['estimators']
+    fitted_models = artifact.get('estimators') or getattr(artifact.get('model'), 'estimators_', None)
+    if fitted_models is None:
+        raise KeyError("model artifact missing 'estimators' key and 'model.estimators_' attribute")
     feature_cols  = artifact['feature_cols']
     label_cols    = artifact['label_cols']
     scaler        = artifact['scaler']
 
     print(f"  Model expects {len(feature_cols)} features.")
 
-    # The scaler was fitted on ALL features during training (50 cols).
-    # We must scale the full feature set first, then subset to the
-    # selected feature columns — NOT the other way around.
-    LABEL_COLS    = label_cols + ["typology_count"]
-    all_feat_cols = [c for c in input_df.columns if c not in LABEL_COLS]
-
-    missing = [c for c in feature_cols if c not in input_df.columns]
-    if missing:
-        raise ValueError(f"Input DataFrame is missing required features: {missing[:5]}...")
-
-    # Step 1: scale ALL features (scaler expects all 50)
-    X_all   = input_df[all_feat_cols].values
-    X_scaled = scaler.transform(X_all)
-
-    # Step 2: subset to the selected feature columns only
-    selected_indices = [all_feat_cols.index(c) for c in feature_cols]
-    X_inf_s = X_scaled[:, selected_indices]
+    # The scaler may have been fitted on all features (model.pkl, 50 cols)
+    # or on selected features only (model_fixed.pkl, 27 cols).
+    # Detect which case we're in by comparing scaler input size to feature_cols size.
+    if scaler.n_features_in_ == len(feature_cols):
+        # Scaler fitted on selected features only — select first, then scale
+        missing = [c for c in feature_cols if c not in input_df.columns]
+        if missing:
+            raise ValueError(f"Input DataFrame is missing required features: {missing[:5]}...")
+        X_inf_s = scaler.transform(input_df[feature_cols].values)
+    else:
+        # Scaler fitted on ALL features — scale all first, then subset
+        LABEL_COLS    = label_cols + ["typology_count"]
+        all_feat_cols = [c for c in input_df.columns if c not in LABEL_COLS]
+        missing = [c for c in feature_cols if c not in input_df.columns]
+        if missing:
+            raise ValueError(f"Input DataFrame is missing required features: {missing[:5]}...")
+        X_all    = input_df[all_feat_cols].values
+        X_scaled = scaler.transform(X_all)
+        selected_indices = [all_feat_cols.index(c) for c in feature_cols]
+        X_inf_s  = X_scaled[:, selected_indices]
     
     out_df = input_df.copy()
     import numpy as np

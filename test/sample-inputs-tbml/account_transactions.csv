@@ -1,0 +1,7 @@
+account_id,customer_id,account_number,account_type,currency,bank_name,bank_country,open_date,status,balance_at_flag,txn_id,txn_datetime,txn_type,amount,direction,counterparty_name,counterparty_account,counterparty_country,swift_message_type,is_cash,round_amount_flag,channel
+ACC-TBM-001,CUS-TBM-001,AC-4400331,current,INR,Axis Bank,India,2013-03-01,active,650000.00,TXN-4001,2024-06-01 10:00:00,wire,500000.00,debit,Lagos Trade Partners Ltd,NG-8800551,Nigeria,MT103,false,true,wire
+ACC-TBM-001,CUS-TBM-001,AC-4400331,current,INR,Axis Bank,India,2013-03-01,active,650000.00,TXN-4002,2024-06-05 11:30:00,wire,1000000.00,debit,Lagos Trade Partners Ltd,NG-8800551,Nigeria,MT103,false,true,wire
+ACC-TBM-001,CUS-TBM-001,AC-4400331,current,INR,Axis Bank,India,2013-03-01,active,650000.00,TXN-4003,2024-06-10 09:15:00,wire,500000.00,debit,Lagos Trade Partners Ltd,NG-8800551,Nigeria,MT103,false,true,wire
+ACC-TBM-001,CUS-TBM-001,AC-4400331,current,INR,Axis Bank,India,2013-03-01,active,650000.00,TXN-4004,2024-06-14 14:45:00,wire,1000000.00,debit,Lagos Trade Partners Ltd,NG-8800551,Nigeria,MT103,false,true,wire
+ACC-TBM-001,CUS-TBM-001,AC-4400331,current,INR,Axis Bank,India,2013-03-01,active,650000.00,TXN-4005,2024-06-18 10:00:00,wire,500000.00,debit,Lagos Trade Partners Ltd,NG-8800551,Nigeria,MT103,false,true,wire
+ACC-TBM-001,CUS-TBM-001,AC-4400331,current,INR,Axis Bank,India,2013-03-01,active,650000.00,TXN-4006,2024-06-21 16:20:00,wire,1000000.00,debit,Lagos Trade Partners Ltd,NG-8800551,Nigeria,MT103,false,true,wire

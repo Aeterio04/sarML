@@ -1,0 +1,6 @@
+alert_id,case_id,account_id,rule_name,alert_scenario,risk_score,previous_alert_count,triggered_at,status
+ALT-RMF2-001,CASE-2024-0107,ACC-RMF-002,Multiple inbound RTGS credits followed by immediate SWIFT exit,rapid_movement,96.8,1,2024-09-15 14:00:00,new
+ALT-RMF2-002,CASE-2024-0107,ACC-RMF-002,Fund exit ratio 0.976 — near-complete pass-through,rapid_movement,93.4,0,2024-09-15 14:05:00,new
+ALT-RMF2-003,CASE-2024-0107,ACC-RMF-002,Wire to FATF blacklisted country — Myanmar,rapid_movement,91.2,0,2024-09-15 14:10:00,new
+ALT-RMF2-004,CASE-2024-0107,ACC-RMF-002,Transaction volume wholly inconsistent with declared income,rapid_movement,88.5,1,2024-09-15 14:15:00,new
+ALT-RMF2-005,CASE-2024-0107,ACC-RMF-002,5 distinct inbound sources — funnel pattern into single exit,rapid_movement,85.1,0,2024-09-15 14:20:00,new

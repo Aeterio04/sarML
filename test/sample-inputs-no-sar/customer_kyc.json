@@ -1,0 +1,23 @@
+[
+  {
+    "customer_id": "CUS-CLN-001",
+    "account_id": "ACC-CLN-001",
+    "full_name": "Anita Desai",
+    "customer_type": "individual",
+    "nationality": "Indian",
+    "country_of_residence": "India",
+    "occupation": "Government Employee",
+    "date_of_birth": "1980-08-25",
+    "kyc_tier": "standard",
+    "kyc_last_reviewed_date": "2023-09-15",
+    "source_of_funds": "Salary",
+    "source_of_wealth": "Employment",
+    "pep_flag": false,
+    "pep_category": null,
+    "sanctions_flag": false,
+    "adverse_media_flag": false,
+    "risk_rating": "low",
+    "previous_sar_count": 0,
+    "customer_since": "2010-05-01"
+  }
+]

@@ -1,0 +1,7 @@
+account_id,customer_id,account_number,account_type,currency,bank_name,bank_country,open_date,status,balance_at_flag,txn_id,txn_datetime,txn_type,amount,direction,counterparty_name,counterparty_account,counterparty_country,swift_message_type,is_cash,round_amount_flag,channel
+ACC-RMF-002,CUS-RMF-002,AC-6600771,savings,INR,Kotak Bank,India,2024-01-15,active,85000.00,TXN-7001,2024-09-15 09:00:00,rtgs,1800000.00,credit,Rajan Mehta,AC-7711001,India,,false,false,online
+ACC-RMF-002,CUS-RMF-002,AC-6600771,savings,INR,Kotak Bank,India,2024-01-15,active,85000.00,TXN-7002,2024-09-15 09:35:00,rtgs,1600000.00,credit,Pradeep Sinha,AC-7711002,India,,false,false,online
+ACC-RMF-002,CUS-RMF-002,AC-6600771,savings,INR,Kotak Bank,India,2024-01-15,active,85000.00,TXN-7003,2024-09-15 10:10:00,rtgs,1900000.00,credit,Suresh Nair,AC-7711003,India,,false,false,online
+ACC-RMF-002,CUS-RMF-002,AC-6600771,savings,INR,Kotak Bank,India,2024-01-15,active,85000.00,TXN-7004,2024-09-15 10:45:00,rtgs,1700000.00,credit,Vikram Joshi,AC-7711004,India,,false,false,online
+ACC-RMF-002,CUS-RMF-002,AC-6600771,savings,INR,Kotak Bank,India,2024-01-15,active,85000.00,TXN-7005,2024-09-15 11:20:00,rtgs,1500000.00,credit,Anand Pillai,AC-7711005,India,,false,false,online
+ACC-RMF-002,CUS-RMF-002,AC-6600771,savings,INR,Kotak Bank,India,2024-01-15,active,85000.00,TXN-7006,2024-09-15 12:50:00,wire,8300000.00,debit,Golden Triangle Holdings,MM-9900881,Myanmar,MT103,false,true,wire

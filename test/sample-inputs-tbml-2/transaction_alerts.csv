@@ -1,0 +1,6 @@
+alert_id,case_id,account_id,rule_name,alert_scenario,risk_score,previous_alert_count,triggered_at,status
+ALT-TBM2-001,CASE-2024-0106,ACC-TBM-002,Wire to FATF blacklisted country — Iran,tbml,97.2,1,2024-09-10 18:00:00,new
+ALT-TBM2-002,CASE-2024-0106,ACC-TBM-002,Round-number alternating wire pattern — 8 transactions,tbml,91.5,0,2024-09-10 18:05:00,new
+ALT-TBM2-003,CASE-2024-0106,ACC-TBM-002,No trade documentation for outward remittances,tbml,88.3,0,2024-09-10 18:10:00,new
+ALT-TBM2-004,CASE-2024-0106,ACC-TBM-002,Declared business inconsistent with counterparty jurisdiction,tbml,85.1,1,2024-09-10 18:15:00,new
+ALT-TBM2-005,CASE-2024-0106,ACC-TBM-002,Adverse media — prior SAR history,tbml,82.7,0,2024-09-10 18:20:00,new

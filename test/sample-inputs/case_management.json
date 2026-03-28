@@ -1,0 +1,15 @@
+{
+  "case_id": "CASE-2024-0101",
+  "status": "under_review",
+  "priority": "high",
+  "jurisdiction": "India",
+  "typology_guess": "funnel_account",
+  "sar_worthy": null,
+  "assigned_to": "analyst_priya",
+  "created_at": "2024-03-10T18:00:00Z",
+  "primary_account_id": "ACC-F001",
+  "related_account_ids": ["ACC-S001", "ACC-S002", "ACC-S003", "ACC-S004"],
+  "customer_ids": ["CUS-F001", "CUS-F002", "CUS-F003", "CUS-F004", "CUS-F005"],
+  "alert_ids": ["ALT-F001", "ALT-F002", "ALT-F003", "ALT-F004", "ALT-F005"],
+  "notes": "Six source accounts pushed funds into a single corporate account (Ravi Shankar Enterprises) within a 2-hour window. Total consolidated amount of INR 378,000 was wired out to Gulf Trade LLC in UAE via MT103 within 3 hours of the first inbound credit. Source account holders have no known business relationship with the corporate. Transaction volumes are inconsistent with declared occupations — housewife, shopkeeper, freelancer. Classic funnel pattern with immediate exit to high-risk jurisdiction."
+}

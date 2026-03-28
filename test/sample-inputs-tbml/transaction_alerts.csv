@@ -1,0 +1,4 @@
+alert_id,case_id,account_id,rule_name,alert_scenario,risk_score,previous_alert_count,triggered_at,status
+ALT-TBM-001,CASE-2024-0104,ACC-TBM-001,Round-number international wire to FATF grey-list country,tbml,91.8,1,2024-06-21 18:00:00,new
+ALT-TBM-002,CASE-2024-0104,ACC-TBM-001,Alternating fixed-amount pattern inconsistent with trade invoicing,tbml,85.3,0,2024-06-21 18:05:00,new
+ALT-TBM-003,CASE-2024-0104,ACC-TBM-001,No trade documentation presented for outward remittances,tbml,80.7,0,2024-06-21 18:10:00,new

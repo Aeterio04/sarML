@@ -1,0 +1,9 @@
+account_id,customer_id,account_number,account_type,currency,bank_name,bank_country,open_date,status,balance_at_flag,txn_id,txn_datetime,txn_type,amount,direction,counterparty_name,counterparty_account,counterparty_country,swift_message_type,is_cash,round_amount_flag,channel
+ACC-TBM-002,CUS-TBM-002,AC-5500661,current,INR,ICICI Bank,India,2011-07-01,active,2200000.00,TXN-6001,2024-08-01 10:00:00,wire,2000000.00,debit,Tehran Commodity Exchange,IR-1100771,Iran,MT103,false,true,wire
+ACC-TBM-002,CUS-TBM-002,AC-5500661,current,INR,ICICI Bank,India,2011-07-01,active,2200000.00,TXN-6002,2024-08-06 11:30:00,wire,2500000.00,debit,Tehran Commodity Exchange,IR-1100771,Iran,MT103,false,true,wire
+ACC-TBM-002,CUS-TBM-002,AC-5500661,current,INR,ICICI Bank,India,2011-07-01,active,2200000.00,TXN-6003,2024-08-12 09:15:00,wire,2000000.00,debit,Tehran Commodity Exchange,IR-1100771,Iran,MT103,false,true,wire
+ACC-TBM-002,CUS-TBM-002,AC-5500661,current,INR,ICICI Bank,India,2011-07-01,active,2200000.00,TXN-6004,2024-08-18 14:45:00,wire,2500000.00,debit,Tehran Commodity Exchange,IR-1100771,Iran,MT103,false,true,wire
+ACC-TBM-002,CUS-TBM-002,AC-5500661,current,INR,ICICI Bank,India,2011-07-01,active,2200000.00,TXN-6005,2024-08-22 10:00:00,wire,2000000.00,debit,Tehran Commodity Exchange,IR-1100771,Iran,MT103,false,true,wire
+ACC-TBM-002,CUS-TBM-002,AC-5500661,current,INR,ICICI Bank,India,2011-07-01,active,2200000.00,TXN-6006,2024-08-27 16:20:00,wire,2500000.00,debit,Tehran Commodity Exchange,IR-1100771,Iran,MT103,false,true,wire
+ACC-TBM-002,CUS-TBM-002,AC-5500661,current,INR,ICICI Bank,India,2011-07-01,active,2200000.00,TXN-6007,2024-09-03 10:00:00,wire,2000000.00,debit,Tehran Commodity Exchange,IR-1100771,Iran,MT103,false,true,wire
+ACC-TBM-002,CUS-TBM-002,AC-5500661,current,INR,ICICI Bank,India,2011-07-01,active,2200000.00,TXN-6008,2024-09-10 11:00:00,wire,2500000.00,debit,Tehran Commodity Exchange,IR-1100771,Iran,MT103,false,true,wire
