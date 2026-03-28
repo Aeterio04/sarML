@@ -1,0 +1,97 @@
+{
+  "feature_selection": {
+    "method": "per_label_MI_union",
+    "top_n_per_label": 8,
+    "labels_used": [
+      "sar_worthy",
+      "typology_structuring",
+      "typology_rapid_movement",
+      "typology_funnel_account",
+      "typology_trade_based",
+      "typology_shell_company",
+      "typology_round_tripping"
+    ],
+    "n_features_selected": 27,
+    "selected_features": [
+      "avg_txn_amount",
+      "avg_txn_amount_cbrt",
+      "burst_per_age",
+      "burst_score",
+      "burst_tier",
+      "burst_x_exit",
+      "counterparty_diversity_score",
+      "distinct_counterparties",
+      "distinct_counterparties_log",
+      "diversity_x_sources",
+      "fund_exit_ratio",
+      "fund_exit_tier",
+      "hr_country_x_exit",
+      "incoming_sources_count",
+      "incoming_sources_count_log",
+      "max_txn_amount",
+      "max_txn_amount_cbrt",
+      "min_txn_amount",
+      "min_txn_amount_cbrt",
+      "std_txn_amount",
+      "std_txn_amount_cbrt",
+      "time_to_first_outbound_minutes",
+      "time_to_first_outbound_minutes_log",
+      "txn_count",
+      "txn_count_log",
+      "txn_velocity",
+      "txn_velocity_log"
+    ],
+    "old_method": "global_MI_vs_sar_worthy_only (BROKEN)",
+    "old_n_features": 9,
+    "old_features": [
+      "burst_score",
+      "burst_x_exit",
+      "burst_per_age",
+      "burst_tier",
+      "fund_exit_ratio",
+      "fund_exit_tier",
+      "time_to_first_outbound_minutes",
+      "time_to_first_outbound_minutes_log",
+      "hr_country_x_exit"
+    ]
+  },
+  "model_performance": {
+    "hamming_loss": 0.0224,
+    "macro_f1": 0.9147,
+    "per_label": {
+      "sar_worthy": {
+        "f1": 0.9451,
+        "auc": 0.9905
+      },
+      "typology_structuring": {
+        "f1": 0.9645,
+        "auc": 0.999
+      },
+      "typology_rapid_movement": {
+        "f1": 0.9103,
+        "auc": 0.9963
+      },
+      "typology_funnel_account": {
+        "f1": 0.9825,
+        "auc": 0.9997
+      },
+      "typology_trade_based": {
+        "f1": 0.8471,
+        "auc": 0.9878
+      },
+      "typology_shell_company": {
+        "f1": 0.7849,
+        "auc": 0.9884
+      },
+      "typology_round_tripping": {
+        "f1": 0.9688,
+        "auc": 0.9999
+      }
+    }
+  },
+  "splits": {
+    "train": 4900,
+    "val": 1050,
+    "test": 1050
+  }
+}
